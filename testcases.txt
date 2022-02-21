@@ -1,0 +1,86 @@
+﻿############### GET ###############
+
+a) no-cache:
+• Url: http://info.cern.ch
+• result:
+  -------------------------------------------------------------------------------------------
+  1: "GET http://info.cern.ch/ HTTP/1.1" from 67.159.94.161 @ Sun, 20 Feb 2022 21:16:17 GMT
+  1: not in cache
+  1: Requesting "GET http://info.cern.ch/ HTTP/1.1" from info.cern.ch
+  1: Received "HTTP/1.1 200 OK" from info.cern.ch
+  1: cached, but requires re-validation
+  1: Responding "HTTP/1.1 200 OK"
+  2: "GET http://info.cern.ch/ HTTP/1.1" from 67.159.94.161 @ Sun, 20 Feb 2022 21:16:18 GMT
+  2: in cache, requires validation
+  2: Requesting "GET http://info.cern.ch/ HTTP/1.1" from info.cern.ch
+  2: Received "HTTP/1.1 304 Not Modified" from info.cern.ch
+  2: in cache, valid
+  2: Responding "HTTP/1.1 200 OK"
+  -------------------------------------------------------------------------------------------
+• another Url: http://www.testingmcafeesites.com/
+
+b) max-age=20 (generated from http://httpbin.org/#/Response_inspection/):
+• Url: http://httpbin.org/cache/20
+• result:
+  -------------------------------------------------------------------------------------------
+  1: "GET http://httpbin.org/cache/20 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:39 GMT
+  1: not in cache
+  1: Requesting "GET http://httpbin.org/cache/20 HTTP/1.1" from httpbin.org
+  1: Received "HTTP/1.1 200 OK" from httpbin.org
+  1: cached, expires at Sun, 20 Feb 2022 22:21:59 GMT
+  1: Responding "HTTP/1.1 200 OK"
+  2: "GET http://httpbin.org/cache/20 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:43 GMT
+  2: in cache, valid
+  2: Responding "HTTP/1.1 200 OK"
+  3: "GET http://httpbin.org/cache/20 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:22:29 GMT
+  3: in cache, but expired at Sun, 20 Feb 2022 22:21:59 GMT
+  3: Requesting "GET http://httpbin.org/cache/20 HTTP/1.1" from httpbin.org
+  3: Received "HTTP/1.1 200 OK" from httpbin.org
+  3: Responding "HTTP/1.1 200 OK"
+  -------------------------------------------------------------------------------------------
+
+c) Transfer-Encoding Chunked:
+• Url: http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx	
+• result:
+  -------------------------------------------------------------------------------------------
+  1: "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 21:46:17 GMT
+  1: not in cache
+  1: Requesting "GET http://www.httpwatch.com/httpgallery/chunked/chunkedimage.aspx HTTP/1.1" from www.httpwatch.com
+  1: not cacheable because response is CHUNCKED
+  1: Responding "HTTP/1.1 200 OK"
+  -------------------------------------------------------------------------------------------
+
+d) Content-Length is large:
+• Url: http://www.columbia.edu/~fdc/sample.html
+
+############### POST ###############
+• url: http://httpbin.org/forms/post
+• result:
+  -------------------------------------------------------------------------------------------
+1: "GET http://httpbin.org/forms/post HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 21:50:18 GMT
+1: not in cache
+1: Requesting "GET http://httpbin.org/forms/post HTTP/1.1" from httpbin.org
+1: Received "HTTP/1.1 200 OK" from httpbin.org
+1: not cacheable because response is NOSTORE: No Etag and no Last-Modified in response.
+1: Responding "HTTP/1.1 200 OK"
+2: "POST http://httpbin.org/post HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 21:50:38 GMT
+2: Requesting "POST http://httpbin.org/post HTTP/1.1" from httpbin.org
+2: Received "HTTP/1.1 200 OK" from httpbin.org
+2: Responding "HTTP/1.1 200 OK"
+  -------------------------------------------------------------------------------------------
+
+############### CONNECT ###############
+• Url: https://www.wikipedia.org/
+• result:
+  -------------------------------------------------------------------------------------------
+  1: "CONNECT www.wikipedia.org:443 HTTP/1.1" from 10.198.188.134 @ Sun, 20 Feb 2022 21:35:14 GMT
+  1: Responding "HTTP/1.1 200 OK"
+  -------------------------------------------------------------------------------------------
+
+############### BAD REQUEST ###############
+cat request_not_exist.txt | netcat vcm-24357.vm.duke.edu 12345 > response.txt
+• result:
+  -------------------------------------------------------------------------------------------
+  1: "" from 67.159.94.161 @ Sun, 20 Feb 2022 20:54:32 GMT
+  1: Responding "HTTP/1.1 400 Bad Request"
+  -------------------------------------------------------------------------------------------

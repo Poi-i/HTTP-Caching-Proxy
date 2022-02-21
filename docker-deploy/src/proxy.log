@@ -1,0 +1,20 @@
+1: "GET http://httpbin.org/cache/20 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:39 GMT
+1: not in cache
+1: Requesting "GET http://httpbin.org/cache/20 HTTP/1.1" from httpbin.org
+1: Received "HTTP/1.1 200 OK" from httpbin.org
+1: cached, expires at Sun, 20 Feb 2022 22:21:59 GMT
+1: Responding "HTTP/1.1 200 OK"
+2: "CONNECT firefox.settings.services.mozilla.com:443 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:40 GMT
+2: Responding "HTTP/1.1 200 OK"
+3: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:40 GMT
+3: Responding "HTTP/1.1 200 OK"
+4: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:40 GMT
+4: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
+5: "GET http://httpbin.org/cache/20 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:43 GMT
+5: in cache, valid
+5: Responding "HTTP/1.1 200 OK"
+6: "GET http://httpbin.org/cache/20 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:22:29 GMT
+6: in cache, but expired at Sun, 20 Feb 2022 22:21:59 GMT
+6: Requesting "GET http://httpbin.org/cache/20 HTTP/1.1" from httpbin.org
+6: Received "HTTP/1.1 200 OK" from httpbin.org
+6: Responding "HTTP/1.1 200 OK"

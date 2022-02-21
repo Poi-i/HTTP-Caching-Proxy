@@ -1,0 +1,26 @@
+------------------------------------------------------------------------------------
+Robustness to external failures: (i.e. What failures did you handle in your code? how do you handle them?)
+Our proxy server is quite robust to external failures, as it handles problems as follows.
+- We have handled case of getting corrupted response from web server when it is responding GET/POST/Revalidation request.
+  It is acheived by checking if the socket is closed while receiving the response, and checking is the header is fully received after receiving the response.
+  Then, if the response is detected corrupeted, we would reply the user browser with a 502 error code
+- We have handled case of getting a malformed request from browser.
+  It is accomplished by checking if the request is received as a whole with correctly formatted header.
+  Otherwise, our proxy would send the browser with a 404 error code.
+- We have also handled multiple external failures cases, including failures of building sockets, connecting to web server, receiving and sending data through sockets, ect.
+  These are done by checking the return value of socket related system call. In most cases, system call returning -1 means problem.
+  Whenever we got the such error described above, we throw exception at the error causing place, and catch the exception at a higher level funcation that can handle the exception. After catching such exception, we free memories in the thread that has error, and exit the thread to make sure such error won't interrupt the function of our server.
+
+
+------------------------------------------------------------------------------------
+Exception guarantee:
+We make strong exception guarantees.
+There are no objects modified and no memory is leaked when an exception is thrown and handled. We write destructors for every class, and calls the destructors for each objects in scope before throwing the exception to make sure there is no dangling pointer.
+Also, we have managed the order of manipulating the objects, so that the objects (including Cache, Requests, etc.) would be intact after catching the exception. But afterall, some object would not be useful anymore if there is error, so we also free memories for thoes objects after catching the exception.
+
+
+------------------------------------------------------------------------------------
+Danger log:
+- When our proxy needs to revalidate the GET request, we need to modify the previous request and send it to the webserver. At the very beginning, we just pass the pointer to the request object into our make_revalidate_req() function, which causes segmentation fault because the changes are made on the copy of the pointer, not the pointer itself. After careful inspection, we found this bug and solved it by passing the pointer to pointer to the request object into the function.
+- In order to determine whether the response with cache-control as max-age is expired, we need to do some time calculations. We didn't take the different time zone into count at the beginning and the result of the test case is weird. We have solved this problem by resisting all time related calculation to GMT.
+- A problem to be solved is that at some rare cases, if we clear the Firefox's cache with its interface, server might get core dumped. Considering Firefox would be having random CONNECT request from time to time, we consider this core dump might be caused by the sudden close of CONNECT communication that caused by clearing cache.
