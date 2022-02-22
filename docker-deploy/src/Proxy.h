@@ -38,6 +38,7 @@ public:
     void activate_server();
     std::pair<int, std::string> accept_user(); // return the user id and user ip
     static std::string get_currtime();
+    static void send_response(Response *response, Socketer *socketer);
 
     ~Proxy()
     {

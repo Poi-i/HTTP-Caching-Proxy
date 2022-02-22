@@ -110,7 +110,7 @@ Response *Proxy::commute_webserver(Socketer *socketer, Request *request)
 
         res += std::string(buf, numbytes);
         received_length += numbytes;
-        std::cout << "Received Length: " << received_length << std::endl;
+        std::cout << "received length: " << received_length << std::endl;
     }
     response = parser->parse_response(res);
     if (check_bad_response(response, socketer))
@@ -136,82 +136,8 @@ void Proxy::resolve_GET(Request *request, Socketer *socketer)
         response = commute_webserver(socketer, request);
         if (response == NULL)
         {
-            return;
+            return; // response has been sent in commute_webserver()
         }
-        // if (send(socketer->web_fd, request->origin.c_str(), request->origin.length(), 0) == -1)
-        // {
-        //     perror("send");
-        // }
-        // char buf[BUFSIZE];
-        // int numbytes;
-        // if ((numbytes = recv(socketer->web_fd, buf, BUFSIZE, 0)) == -1)
-        // {
-        //     perror("recv");
-        //     std::terminate();
-        // }
-        // response = parser->parse_response(buf);
-        // if (check_bad_response(response, socketer))
-        // {
-        //     return;
-        // }
-        // if (response->chunk != "")
-        // {
-        //     delete (response);
-        //     if (send(socketer->user_fd, buf, numbytes, 0) == -1)
-        //     {
-        //         perror("send");
-        //     }
-        //     while (true)
-        //     {
-        //         char chunk[BUFSIZE];
-        //         int numbytes = recv(socketer->web_fd, chunk, BUFSIZE, 0);
-        //         if (numbytes == 0)
-        //         {
-        //             perror("recv");
-        //             break;
-        //         }
-        //         else if (numbytes < 0)
-        //         {
-        //             perror("recv");
-        //             std::terminate();
-        //         }
-        //         else
-        //         {
-        //             if (send(socketer->user_fd, chunk, numbytes, 0) == -1)
-        //             {
-        //                 perror("send");
-        //             }
-        //         }
-        //     }
-        //     return;
-        // }
-        // std::string res(buf, numbytes);
-        // int content_length = parser->parse_content_length(response->origin);
-        // std::cout << "content length: " << content_length << std::endl;
-        // int received_length = numbytes;
-        // std::cout << "received length: " << received_length << std::endl;
-        // while (content_length > received_length)
-        // {
-        //     numbytes = recv(socketer->web_fd, buf, BUFSIZE, 0);
-        //     if (numbytes == 0)
-        //     {
-        //         send_502(socketer);
-        //     }
-        //     if (numbytes == -1)
-        //     {
-        //         perror("recv");
-        //         std::terminate();
-        //     }
-
-        //     res += std::string(buf, numbytes);
-        //     received_length += numbytes;
-        //     // std::cout << "Received Length: " << received_length << std::endl;
-        // }
-        // response = parser->parse_response(res);
-        // if (check_bad_response(response, socketer))
-        // {
-        //     return;
-        // }
 
         pthread_mutex_lock(&mutex);
         log << socketer->user_id << ": Received \"" << parser->parse_by_deli(response->origin, '\r') << "\" from " << request->host_name << std::endl;
@@ -253,7 +179,7 @@ void Proxy::resolve_GET(Request *request, Socketer *socketer)
     { // cache exist
         // response get from cache
         std::cout << "--------------Cached response-----------------" << std::endl;
-        response->print_response();
+        // response->print_response();
         std::cout << "--------------End Cached response-----------------" << std::endl;
         switch (response->cache_type)
         {
@@ -291,6 +217,8 @@ void Proxy::resolve_GET(Request *request, Socketer *socketer)
     response->print_response();
     // std::cout << "_________END__________" << std::endl;
     // send response to user
+
+    // send_response(response, socketer);
     if (send(socketer->user_fd, response->origin.c_str(), response->origin.length(), 0) == -1)
     {
         perror("send");
@@ -304,6 +232,26 @@ void Proxy::resolve_GET(Request *request, Socketer *socketer)
     {
         // don't need to delete response if it is in cache/updated by cahce
         delete (response);
+    }
+}
+
+void Proxy::send_response(Response *response, Socketer *socketer)
+{
+    std::cout << "--- From send_response: " << std::endl;
+    std::string to_send(response->origin.c_str());
+    int response_length = response->origin.length();
+    std::cout << "--- From send_response: length to send: " << response_length << std::endl;
+    int sent_length = 0;
+    while (sent_length < response_length)
+    {
+        int numbytes = send(socketer->user_fd, to_send.substr(sent_length).c_str(), response_length - sent_length, 0);
+        if (numbytes == -1)
+        {
+            perror("send");
+            throw "send get response failed in resolve_GET";
+        }
+        sent_length += numbytes;
+        std::cout << "--- From send_response: sent_length: " << sent_length << std::endl;
     }
 }
 
@@ -392,30 +340,11 @@ void Proxy::resolve_POST(Request *request, Socketer *socketer)
     pthread_mutex_lock(&mutex);
     log << socketer->user_id << ": Requesting \"" << request->start_line << "\" from " << request->host_name << std::endl;
     pthread_mutex_unlock(&mutex);
-    // if (send(socketer->web_fd, request->origin.c_str(), request->origin.length(), MSG_NOSIGNAL) == -1)
-    // {
-    //     perror("send");
-    // }
-    // int numbytes;
-    // // char buf[MAXDATASIZE];
-    // std::vector<char> buf(MAXDATASIZE);
-    // if ((numbytes = recv(socketer->web_fd, &buf.data()[0], MAXDATASIZE - 1, MSG_WAITALL)) == -1)
-    // {
-    //     perror("recv");
-    //     std::terminate();
-    // }
 
-    // buf[numbytes] = '\0';
     Response *response = commute_webserver(socketer, request); // parser->parse_response(buf.data());
     pthread_mutex_lock(&mutex);
     log << socketer->user_id << ": Received \"" << parser->parse_by_deli(response->origin, '\r') << "\" from " << request->host_name << std::endl;
     pthread_mutex_unlock(&mutex);
-    // send response to user
-    // std::cout << "buf.data(): " << buf.data() << "\nstrlen(buf.data()): " << strlen(buf.data()) << std::endl;
-    // if (send(socketer->user_fd, buf.data(), strlen(buf.data()), 0) == -1)
-    // {
-    //     perror("send");
-    // }
 
     if (send(socketer->user_fd, response->origin.c_str(), response->origin.length(), 0) == -1)
     {
@@ -553,27 +482,15 @@ void Proxy::revalidate(Response **response, Request *request, Socketer *socketer
     log << socketer->user_id << ": Requesting \"" << request->start_line << "\" from " << request->host_name << std::endl;
     pthread_mutex_unlock(&mutex);
     *response = commute_webserver(socketer, my_request);
+    /* TESTING CODE */
     // std::string our_str = std::string("HTTP/1.1 200 OK\r\nDate: Wed, 16 Feb 2022 21:43:25 GMT\r\nServer: Apache\r\nETag: \"286-4f1aadb3105c1\"\r\nAccept-Ranges: bytes\r\nContent-Length: 646\r\nConnection: close\r\nContent-Type: text/html\r\n\r\n<html><head></head><body><header><title>http://info.cern.ch</title></header><h1>home of the first website</h1></body></html>\r\n");
     // *response = parser->parse_response(our_str);
+    /* TESTING CODE */
     if (*response == NULL)
     {
         return;
     }
-    // if (send(socketer->web_fd, my_request.c_str(), my_request.length(), 0) == -1)
-    // {
-    //     perror("send");
-    // }
-    // std::cout << "---------- REVALIDATE REQUEST SENT TO WEB SERVER ----------\n"
-    //           << my_request << std::endl;
 
-    // int numbytes;
-    // std::vector<char> buf(MAXDATASIZE);
-    // if ((numbytes = recv(socketer->web_fd, &buf.data()[0], MAXDATASIZE - 1, 0)) == -1)
-    // {
-    //     perror("recv");
-    //     std::terminate();
-    // }
-    // buf[numbytes] = '\0';
     pthread_mutex_lock(&mutex);
     log << socketer->user_id << ": Received \"" << parser->parse_by_deli((*response)->origin, '\r') << "\" from " << request->host_name << std::endl;
     pthread_mutex_unlock(&mutex);

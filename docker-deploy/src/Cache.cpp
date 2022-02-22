@@ -25,7 +25,8 @@ void Cache::update_cache(std::string &start_line, Response *response)
     std::cout << "---------- CACHE UPDATE ----------" << std::endl;
 
     std::cout << "---------- CACHE STARTLINE ----------"
-              << "/n" << start_line << std::endl;
+              << "\n"
+              << start_line << std::endl;
     // updata map and  queue
 
     if (get_response_unsafe(start_line) == NULL)

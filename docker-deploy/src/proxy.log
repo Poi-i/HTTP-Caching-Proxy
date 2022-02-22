@@ -1,20 +1,72 @@
-1: "GET http://httpbin.org/cache/20 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:39 GMT
-1: not in cache
-1: Requesting "GET http://httpbin.org/cache/20 HTTP/1.1" from httpbin.org
-1: Received "HTTP/1.1 200 OK" from httpbin.org
-1: cached, expires at Sun, 20 Feb 2022 22:21:59 GMT
+1: "CONNECT info.cern.ch:443 HTTP/1.1" from 10.198.188.134 @ Tue, 22 Feb 2022 20:11:38 GMT
 1: Responding "HTTP/1.1 200 OK"
-2: "CONNECT firefox.settings.services.mozilla.com:443 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:40 GMT
+1: Tunnel closed
+2: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.198.188.134 @ Tue, 22 Feb 2022 20:11:38 GMT
+2: not in cache
+3: "GET http://info.cern.ch/ HTTP/1.1" from 10.198.188.134 @ Tue, 22 Feb 2022 20:11:38 GMT
+3: not in cache
+2: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+2: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
+2: cached, but requires re-validation
 2: Responding "HTTP/1.1 200 OK"
-3: "CONNECT incoming.telemetry.mozilla.org:443 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:40 GMT
-3: Responding "HTTP/1.1 200 OK"
-4: "POST http://ocsp.digicert.com/ HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:40 GMT
-4: Requesting "POST http://ocsp.digicert.com/ HTTP/1.1" from ocsp.digicert.com
-5: "GET http://httpbin.org/cache/20 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:21:43 GMT
-5: in cache, valid
+4: "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from 10.198.188.134 @ Tue, 22 Feb 2022 20:11:38 GMT
+4: not in cache
+5: "CONNECT mozilla.cloudflare-dns.com:443 HTTP/1.1" from 10.198.188.134 @ Tue, 22 Feb 2022 20:11:38 GMT
 5: Responding "HTTP/1.1 200 OK"
-6: "GET http://httpbin.org/cache/20 HTTP/1.1" from 10.197.88.253 @ Sun, 20 Feb 2022 22:22:29 GMT
-6: in cache, but expired at Sun, 20 Feb 2022 22:21:59 GMT
-6: Requesting "GET http://httpbin.org/cache/20 HTTP/1.1" from httpbin.org
-6: Received "HTTP/1.1 200 OK" from httpbin.org
+4: Requesting "GET http://detectportal.firefox.com/success.txt?ipv4 HTTP/1.1" from detectportal.firefox.com
+4: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
+4: cached, but requires re-validation
+4: Responding "HTTP/1.1 200 OK"
+3: Requesting "GET http://info.cern.ch/ HTTP/1.1" from info.cern.ch
+3: Received "HTTP/1.1 200 OK" from info.cern.ch
+3: cached, but requires re-validation
+3: Responding "HTTP/1.1 200 OK"
+6: "GET http://info.cern.ch/favicon.ico HTTP/1.1" from 10.198.188.134 @ Tue, 22 Feb 2022 20:11:38 GMT
+6: not in cache
+6: Requesting "GET http://info.cern.ch/favicon.ico HTTP/1.1" from info.cern.ch
+6: Received "HTTP/1.1 200 OK" from info.cern.ch
+6: cached, but requires re-validation
 6: Responding "HTTP/1.1 200 OK"
+7: "CONNECT info.cern.ch:443 HTTP/1.1" from 10.197.53.94 @ Tue, 22 Feb 2022 20:11:41 GMT
+7: Responding "HTTP/1.1 200 OK"
+7: Tunnel closed
+8: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.53.94 @ Tue, 22 Feb 2022 20:11:42 GMT
+8: in cache, requires validation
+9: "GET http://info.cern.ch/ HTTP/1.1" from 10.197.53.94 @ Tue, 22 Feb 2022 20:11:42 GMT
+9: in cache, requires validation
+8: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+8: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
+8: Responding "HTTP/1.1 200 OK"
+10: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.53.94 @ Tue, 22 Feb 2022 20:11:42 GMT
+10: in cache, requires validation
+10: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+10: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
+10: Responding "HTTP/1.1 200 OK"
+9: Requesting "GET http://info.cern.ch/ HTTP/1.1" from info.cern.ch
+11: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.53.94 @ Tue, 22 Feb 2022 20:11:42 GMT
+11: in cache, requires validation
+11: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+11: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
+11: Responding "HTTP/1.1 200 OK"
+12: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.53.94 @ Tue, 22 Feb 2022 20:11:42 GMT
+12: in cache, requires validation
+12: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+12: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
+12: Responding "HTTP/1.1 200 OK"
+9: Received "HTTP/1.1 200 OK" from info.cern.ch
+9: Responding "HTTP/1.1 200 OK"
+13: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.53.94 @ Tue, 22 Feb 2022 20:11:42 GMT
+13: in cache, requires validation
+13: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+14: "GET http://info.cern.ch/favicon.ico HTTP/1.1" from 10.197.53.94 @ Tue, 22 Feb 2022 20:11:42 GMT
+14: in cache, requires validation
+13: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
+13: Responding "HTTP/1.1 200 OK"
+14: Requesting "GET http://info.cern.ch/favicon.ico HTTP/1.1" from info.cern.ch
+15: "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from 10.197.53.94 @ Tue, 22 Feb 2022 20:11:42 GMT
+15: in cache, requires validation
+15: Requesting "GET http://detectportal.firefox.com/canonical.html HTTP/1.1" from detectportal.firefox.com
+15: Received "HTTP/1.1 200 OK" from detectportal.firefox.com
+15: Responding "HTTP/1.1 200 OK"
+14: Received "HTTP/1.1 200 OK" from info.cern.ch
+14: Responding "HTTP/1.1 200 OK"

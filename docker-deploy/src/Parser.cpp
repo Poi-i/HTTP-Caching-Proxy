@@ -89,11 +89,13 @@ std::string Parser::parse_after_deli(const std::string &origin, char deli)
 
 std::string Parser::parse_by_word(std::string origin, std::string word)
 {
-    // word = to_lower(word);
+    word = to_lower(word);
     // std::string origin_lower = to_lower(origin);
-    // size_t start_pos = origin_lower.find(word);
+    //  size_t start_pos = origin_lower.find(word);
     std::string header(origin.substr(0, origin.find("\r\n\r\n")));
-    size_t start_pos = header.find(word);
+    std::string header_lower(header); // make a copy of header to change all char to lower
+    to_lower(header_lower);
+    size_t start_pos = header_lower.find(word);
     if (start_pos == std::string::npos) // if there is no such header tag
     {
         return "";
@@ -101,7 +103,7 @@ std::string Parser::parse_by_word(std::string origin, std::string word)
     else
     {
         start_pos += word.length(); // start of the position of substring
-        size_t end_pos = header.find_first_of('\n', start_pos) - 1;
+        size_t end_pos = header_lower.find_first_of('\n', start_pos) - 1;
         return header.substr(start_pos, end_pos - start_pos);
     }
 }
