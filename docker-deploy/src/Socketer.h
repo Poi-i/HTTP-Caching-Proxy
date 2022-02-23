@@ -10,7 +10,7 @@
 #include <iostream>
 #include <vector>
 
-#define BACKLOG 100
+#define BACKLOG 1024
 #define BUFSIZE 1024
 
 class Socketer
